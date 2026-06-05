@@ -143,37 +143,21 @@ mkfs.xfs /dev/vol0/lv0
 echo "/dev/vol0/lv0  /cms  xfs  defaults  0 0" >> /etc/fstab
 mount -a
 ```
-#### Q0. Create a Logical Volume partition. Below are the conditions: Volume Group is 510MB and named vol0; Logical Volume is 80MB and named lv0; File type is xfs and permanently mounted to the /cms file system.
-
-510 / 4 = 127.5 → we have 127 PE → the system adds one PE = 128 PE
-128 \* 4 = 512! But we only need 510.
-*Solution*: change the PE size from 4 to 2:
-
-Creating a 510M + PE = 2 partition:
-
-
-```bash
-fdisk /dev/sda then n then +512m then w (by default, the VG reduces one PE = 2)
-vgcreate -s 2M vol0 /dev/sda1
-lvcreate -L 80M -n lv0 vol0
-mkdir /cms
-mkfs.xfs /dev/vol0/lv0
-echo “/dev/vol0/lv0		/cms		xfs	defaults 0 0” >> /etc/fstab
-
-```
-
 #### Q1. Create a Logical Volume Lvi with 60 extents ;Volume Group Vgi with 16MB extent size Mount it permanently under /record with file system ext3.
 
-create a partition larger than 60×16 (/dev/sda2)
+PE size = 16M (given) → LV = 60 × 16M = 960M
+Partition = 960M + 1 PE (16M) = 976M
 
 ```bash
-vgcreate -s 16M vgi /dev/sda2
-lvcreate -l 60 -n lvi vgi
-mkfs.ext3 /dev/vgi/lvi
+fdisk /dev/sda   # n → +976M → w
+partprobe /dev/sda
+pvcreate /dev/sda1
+vgcreate -s 16M vgi /dev/sda1        # PE size = 16M
+lvcreate -l 60 -n lvi vgi            # -l (lowercase) = number of PEs
 mkdir /record
-echo “/dev/vgi/lvi  /record  ext3  defaults 0 0” >> /etc/fstab
+mkfs.ext3 /dev/vgi/lvi
+echo "/dev/vgi/lvi  /record  ext3  defaults  0 0" >> /etc/fstab
 mount -a
-```
 
 #### Q2. Resize the LV named lv0 = 152M so that it falls within the range of 200MB to 300MB.
 
