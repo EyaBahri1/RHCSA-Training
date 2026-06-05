@@ -104,18 +104,24 @@ We can also extend the LV: we can have two cases — if the VG space is sufficie
 * lvextend -r -L +<size> /dev/vg_name/lv_name → to extend the LV. (an LV already mounted with a filesystem — -r: to also extend the filesystem)
 * lvs → to verify
 
-#### Creation of an LV by giving number of PEs: extent and its PE size:
+#### Creation of an LV by giving number of PEs:
 
-* vgdisplay → to view the PE
-* vgcreate -s <size_extent>unity name_of_grp /dev/pv_name /dev/pv_name… → to create a volume group with a PE size of size_extent.
-* lvcreate -l <number> -n name_of_lv name_of_grp → to create an LV based on the number of PEs.
-  *size of PE* × *number of PE* = *size of LV*
-* lvs → to verify: the size must be <number>*<size_extent>.
+A **PE (Physical Extent)** is the smallest allocation unit in a VG.
+Instead of specifying a size directly, you allocate a number of PEs.
+→ size of LV = PE size × number of PEs (e.g. 4M × 3 = 12M)
 
-*Note:* to delete an LV, you must unmount it (umount lvname, comment line in /etc/fstab and mount -a)
+* `vgdisplay` → view PE size and number of free PEs
+* `vgcreate -s <pe_size> <vg_name> /dev/pv_name ...` → create a VG with a custom PE size (e.g. `-s 8M`)
+* `lvcreate -l <nb_pe> -n <lv_name> <vg_name>` → create an LV using a number of PEs (`-l`) instead of a size (`-L`)
+* `lvs` → verify: size should equal nb_pe × pe_size
 
-* lvremove /dev/grp_name/lv_name
-  *Note:* to delete a VG, vgremove grp_name
+*Note:* `-l` (lowercase) = number of PEs / `-L` (uppercase) = direct size (e.g. `-L 12M`)
+
+#### Deleting an LV / VG:
+* `umount /lv_name` → unmount the LV
+* comment out its line in `/etc/fstab`, then `mount -a`
+* `lvremove /dev/vg_name/lv_name` → delete the LV
+* `vgremove vg_name` → delete the VG
 
 ## Lab 08
 
