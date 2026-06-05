@@ -3,7 +3,6 @@
 ## Introduction
 👋 In this section, we will explore how to manage disks, partitions, LVM, and Stratis in a Red Hat Linux environment.
 ## Theory:
-
 - **Partitioning**: creating one or more independent storage zones.
 - **MBR Disk Structure**:
 - Example:
