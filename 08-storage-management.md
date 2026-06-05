@@ -67,22 +67,15 @@ swapon -a
 ## Logical Volume Management (LVM)
 
 ### Theory:
-<p align="center">
-  <img src="images/Ca.JPG" alt="cap" style="width: 600px;"/>
-</p> 
 To obtain a logical volume, we must:
-
 * Have a physical volume (PV) created from a partition.
 * Create a volume group (VG) from physical volumes (PVs).
 * Create a logical volume (LV).
 
-*Why?* (We need an 8G volume, but we only have partitions smaller than 8G. Solution: use the LVM concept.)
-*Note:* By default, when we create the VG, a small percentage will be reserved for metadata (one PE per partition (PV)).
+*Why?* We need an 8G volume but only have partitions smaller than 8G.
+→ LVM combines them into one pool and carves out any size you need.
 
 ### Commands:
-
-*Note:* by default, if we create the VG a small percentage will be reserved for metadata (one PE per partition (PV))
-
 #### Creation of an LV by giving you an exact size:
 
 * pvcreate /dev/partition_name → to create a physical volume.
@@ -100,7 +93,7 @@ We can also extend the LV: we can have two cases — if the VG space is sufficie
 ##### If VG space is sufficient:
 
 * vgs → to view VG details (free size)
-* lvextend -r -L +<size> /dev/group_name/lv_name → to extend the LV.
+* lvextend -r -L +<size> /dev/vg_name/lv_name → to extend the LV.
 * lvs → to verify
 
 ##### If VG space is insufficient: (extend VG then LV)
@@ -108,7 +101,7 @@ We can also extend the LV: we can have two cases — if the VG space is sufficie
 * vgs → to view VG details (free size)
 * pvs → check if there’s a PV, otherwise create one → pvcreate /dev/partition_name.
 * vgextend vg_name name_free_physical_volume → to extend the VG.
-* lvextend -r -L +<size> /dev/group_name/lv_name → to extend the LV. (an LV already mounted with a filesystem — -r: to also extend the filesystem)
+* lvextend -r -L +<size> /dev/vg_name/lv_name → to extend the LV. (an LV already mounted with a filesystem — -r: to also extend the filesystem)
 * lvs → to verify
 
 #### Creation of an LV by giving number of PEs: extent and its PE size:
