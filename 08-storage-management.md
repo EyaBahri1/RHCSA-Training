@@ -64,11 +64,6 @@ mkswap /dev/sdb2
 echo “UUID=uuid  none  swap  0 0” >> /etc/fstab
 swapon -a
 ```
-
-### Q4. Create a 2GB SWAP partition active at boot
-
-(Same steps as above)
-
 ## Logical Volume Management (LVM)
 
 ### Theory:
@@ -79,7 +74,7 @@ To obtain a logical volume, we must:
 
 * Have a physical volume (PV) created from a partition.
 * Create a volume group (VG) from physical volumes (PVs).
-* Create a logical volume.
+* Create a logical volume (LV).
 
 *Why?* (We need an 8G volume, but we only have partitions smaller than 8G. Solution: use the LVM concept.)
 *Note:* By default, when we create the VG, a small percentage will be reserved for metadata (one PE per partition (PV)).
