@@ -133,7 +133,7 @@ Instead of specifying a size directly, you allocate a number of PEs.
 → create the partition as 512M (510M + 1 PE of 2M) to compensate
 
 ```bash
-fdisk /dev/sda   # n → +512M → w
+fdisk /dev/sda   # n → +512M → t → 8e (LVM) → w
 partprobe /dev/sda
 pvcreate /dev/sda1
 vgcreate -s 2M vol0 /dev/sda1        # PE size = 2M → VG = 510M usable
@@ -149,7 +149,7 @@ PE size = 16M (given) → LV = 60 × 16M = 960M
 Partition = 960M + 1 PE (16M) = 976M
 
 ```bash
-fdisk /dev/sda   # n → +976M → w
+fdisk /dev/sda   # n → +976M → t → 8e (LVM) →  w
 partprobe /dev/sda
 pvcreate /dev/sda1
 vgcreate -s 16M vgi /dev/sda1        # PE size = 16M
@@ -163,7 +163,10 @@ mount -a
 #### Q2. Resize the LV named lv0 = 152M so that it falls within the range of 200MB to 300MB.
 
 **Creation of lv0:**
-fdisk /dev/sda then +156M (152 + 4 PE) → vgcreate vg /dev/sda1 →
+fdisk /dev/sda then +156M (152 + 4 PE) → t → 8e (LVM) → W
+partprobe /dev/sda
+pvcreate /dev/sda1
+vgcreate vg /dev/sda1 
 lvcreate -L 152M -n lv0 vg
 
 *Correction:*
