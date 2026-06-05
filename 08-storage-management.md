@@ -76,33 +76,30 @@ To obtain a logical volume, we must:
 → LVM combines them into one pool and carves out any size you need.
 
 ### Commands:
-#### Creation of an LV by giving you an exact size:
 
-* pvcreate /dev/partition_name → to create a physical volume.
-* vgcreate vg_name /dev/partition_name1 /dev/partition_name2… → to create a volume group.
-* lvcreate -L sizeunity -n lv_name vg_name → to create the logical volume.
+#### Creation of an LV by giving you an exact size:
+* `pvcreate /dev/partition_name` → create a physical volume
+* `vgcreate vg_name /dev/partition_name1 /dev/partition_name2` → create a volume group
+* `lvcreate -L <size> -n lv_name vg_name` → create the logical volume
 
 Mount the logical volume:
+* `mkdir /mount_point` → create the mount point
+* `mkfs.xfs /dev/vg_name/lv_name` → format the LV
+* `echo "/dev/vg_name/lv_name  /mount_point  xfs  defaults  0 0" >> /etc/fstab` then `mount -a` → mount the LV
 
-* mkdir /mount_point → create the mount point
-* mkfs.xfs /dev/vg_name/lv_name → to assign a filesystem: format the LV.
-* echo “/dev/vg_name/lv_name	/mount_point	xfs	defaults	0 0” >> /etc/fstab then mount -a → to mount the LV.
-
-We can also extend the LV: we can have two cases — if the VG space is sufficient, and if the VG space is insufficient.
+We can also extend the LV: two cases — VG space sufficient, or insufficient.
 
 ##### If VG space is sufficient:
-
-* vgs → to view VG details (free size)
-* lvextend -r -L +<size> /dev/vg_name/lv_name → to extend the LV.
-* lvs → to verify
+* `vgs` → view VG details (free size)
+* `lvextend -r -L +<size> /dev/vg_name/lv_name` → extend the LV (`-r`: also extends the filesystem)
+* `lvs` → verify
 
 ##### If VG space is insufficient: (extend VG then LV)
-
-* vgs → to view VG details (free size)
-* pvs → check if there’s a PV, otherwise create one → pvcreate /dev/partition_name.
-* vgextend vg_name name_free_physical_volume → to extend the VG.
-* lvextend -r -L +<size> /dev/vg_name/lv_name → to extend the LV. (an LV already mounted with a filesystem — -r: to also extend the filesystem)
-* lvs → to verify
+* `vgs` → view VG details (free size)
+* `pvs` → check if a free PV exists, otherwise: `pvcreate /dev/partition_name`
+* `vgextend vg_name /dev/free_pv_name` → extend the VG
+* `lvextend -r -L +<size> /dev/vg_name/lv_name` → extend the LV (`-r`: also extends the filesystem)
+* `lvs` → verify
 
 #### Creation of an LV by giving number of PEs:
 
