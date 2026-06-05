@@ -121,7 +121,28 @@ Instead of specifying a size directly, you allocate a number of PEs.
 * `vgremove vg_name` → delete the VG
 
 ## Lab 08
+#### Q0. Create a Logical Volume partition. Below are the conditions: Volume Group is 510MB and named vol0; Logical Volume is 80MB and named lv0; File type is xfs and permanently mounted to the /cms file system.
 
+**Problem:** default PE size = 4M (always)
+510 / 4 = 127.5 → not divisible → LVM rounds up to 128 PE → 128 × 4 = 512M ≠ 510M ❌
+
+**Solution:** change PE size to 2M
+510 / 2 = 255 PE → 255 × 2 = 510M ✓
+
+**But:** LVM always reserves 1 PE for its metadata (always)
+→ create the partition as 512M (510M + 1 PE of 2M) to compensate
+
+```bash
+fdisk /dev/sda   # n → +512M → w
+partprobe /dev/sda
+pvcreate /dev/sda1
+vgcreate -s 2M vol0 /dev/sda1        # PE size = 2M → VG = 510M usable
+lvcreate -L 80M -n lv0 vol0
+mkdir /cms
+mkfs.xfs /dev/vol0/lv0
+echo "/dev/vol0/lv0  /cms  xfs  defaults  0 0" >> /etc/fstab
+mount -a
+```
 #### Q0. Create a Logical Volume partition. Below are the conditions: Volume Group is 510MB and named vol0; Logical Volume is 80MB and named lv0; File type is xfs and permanently mounted to the /cms file system.
 
 510 / 4 = 127.5 → we have 127 PE → the system adds one PE = 128 PE
