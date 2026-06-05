@@ -1,18 +1,11 @@
 
 # Storage Management
-
 ## Introduction
 👋 In this section, we will explore how to manage disks, partitions, LVM, and Stratis in a Red Hat Linux environment.
-
-## Disks & Partitions:
-<p align="center">
-  <img src="images/Cap1.JPG" alt="cap" style="width: 600px;"/>
-</p> 
-
-### Theory:
+## Theory:
 
 - **Partitioning**: creating one or more independent storage zones.
-- **MBR Disk Structure**: maximum 4 partitions: 4 primary or 3 primary + 1 extended (which can contain multiple logical).
+- **MBR Disk Structure**:
 - Example:
   - SATA device:
     - `/dev/sda`: first SATA disk.
@@ -27,11 +20,13 @@
 - `lsblk` → view disks and partitions
 - `fdisk /dev/disk` then `n` → create a partition
 - `mkfs.filesystem_type /dev/partition` → format the partition
+- `mkfs.xfs -L mylabel /dev/partition` → format with a label
 - `mkdir /mount_point` → create the mount point
 - `blkid /dev/partition` → get UUID
 - Add to `/etc/fstab`:
   ```
   UUID=<uuid>  /mount_dir  xfs  defaults  0 0
+  LABEL=mylabel  /mount_dir  xfs  defaults  0 0
   ```
 - `mount -a` → mount all entries from `/etc/fstab`
 - `umount /partition`
