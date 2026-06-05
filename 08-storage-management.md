@@ -18,6 +18,7 @@
 ### Commands:
 - `lsblk` → view disks and partitions
 - `fdisk /dev/disk` then `n` → create a partition
+- `partprobe /dev/disk` → notify kernel of partition changes
 - `mkfs.filesystem_type /dev/partition` → format the partition
 - `mkfs.xfs -L mylabel /dev/partition` → format with a label
 - `mkdir /mount_point` → create the mount point
