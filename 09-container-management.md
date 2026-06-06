@@ -97,12 +97,14 @@ This container runs a Python script `pdf_converter.py` to convert text files to 
 ```bash
 # --- as root ---
 dnf install podman container-tools
-useradd pod && passwd pod
+useradd pod
+passwd pod
 loginctl enable-linger pod
 
 mkdir -p /data/input /data/output
 chown -R pod:pod /data/*
 chmod -R 777 /data/input /data/output
+
 echo "file" > /data/input/file.txt
 chown pod:pod /data/input/file.txt
 
@@ -112,23 +114,20 @@ ssh pod@localhost
 wget https://raw.githubusercontent.com/sachinyadav3496/Text-To-PDF/master/pdf_converter.py
 wget https://raw.githubusercontent.com/sachinyadav3496/Text-To-PDF/master/Dockerfile
 podman build -t pdf .                                                     # build image from Dockerfile
-podman images                                                             # verify image was created
-
-podman run -d --name pdfconverter \
-  -v /data/input:/data/input:Z \                                          # :Z sets SELinux context (required on RHEL)
-  -v /data/output:/data/output:Z \
-  image_id                                                                # serves as template for generate systemd
+podman images                                                            
+podman run -d --name pdfconverter -v /data/input:/data/input:Z -v /data/output:/data/output:Z image_id
 
 # --- create systemd user service ---
 mkdir -p ~/.config/systemd/user
 cd ~/.config/systemd/user
-podman generate systemd --name pdfconverter --files --new                 # --new: recreates container from scratch on each start
+podman generate systemd --name pdfconverter --files --new                 
+
 # edit container-pdfconverter.service: change Restart=on-failure → Restart=always
 systemctl --user daemon-reload                                            # always reload after editing a .service file
 systemctl --user enable --now container-pdfconverter.service
 
 # --- verify ---
-podman exec -it pdfconverter bash
+podman exec -it pdfconverter /bin/bash
 ls /data/output                                                           # check output files inside container
 exit
 
