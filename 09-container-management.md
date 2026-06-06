@@ -40,10 +40,10 @@
 - Run container as a user service (systemd):
   - `mkdir -p /home/user1/.config/systemd/user`
   - `cd /home/user1/.config/systemd/user`
-  - `podman generate systemd --name container_name --files --new`
+  - `podman generate systemd --name container_name --files --new` # --new: service will recreate the container from scratch on each start
   - Edit the generated service file to use `restart=always`
   - Reload and enable service: 
-    - `systemctl --user daemon-reload`
+    - `systemctl --user daemon-reload` # always reload after editing a .service file
     - `systemctl --user enable --now service_name`
   - After reboot: `systemctl --user status service_name`
   - Check logs as root: `journalctl | grep container-rsyslog.service`
