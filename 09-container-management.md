@@ -46,6 +46,7 @@
 <p align="center">
   <img src="images/Docker-ports.png" alt="cap" style="width: 600px;"/>
 </p>  
+
 Launch an httpd container from the image: `registry.access.redhat.com/ubi9/httpd-24`
 
 Requirements:
@@ -58,28 +59,32 @@ Steps:
 ```bash
 useradd webadmin
 passwd webadmin
-loginctl enable-linger webadmin
+loginctl enable-linger webadmin                                          # keep services alive after logout/reboot
 mkdir /home/webadmin/html
-echo 'hi' > /home/webadmin/html/index.html
+echo 'hi' > /home/webadmin/html/index.html                              # test page to verify the bind mount works
 chown webadmin:webadmin /home/webadmin/html /home/webadmin/html/index.html
-ssh webadmin@localhost
+ssh webadmin@localhost                                                   # SSH only, not su
 podman pull registry.access.redhat.com/ubi9/httpd-24
-podman run -d --name web -p 8081:8080 -v /home/webadmin/html:/var/www/html:Z image_id
+podman run -d --name web \
+  -p 8081:8080 \                                                        # host:container port mapping
+  -v /home/webadmin/html:/var/www/html:Z \                              # :Z sets SELinux context
+  image_id                                                              # serves as template for generate systemd
 mkdir -p ~/.config/systemd/user
 cd ~/.config/systemd/user
-podman generate systemd --name web --files --new
-systemctl --user daemon-reload
+podman generate systemd --name web --files --new                        # --new: recreates container from scratch on each start
+# edit container-web.service: change Restart=on-failure → Restart=always
+systemctl --user daemon-reload                                          # always reload after editing .service file
 systemctl --user enable --now container-web.service
-curl localhost:8081
-podman exec -it web /bin/bash
-bash-5.1$ curl localhost:8080
-
+curl localhost:8081                                                     # test from host side (port 8081)
+podman exec -it web /bin/bash                                           # enter the container
+bash-5.1$ curl localhost:8080                                           # test from inside the container (port 8080)
 ```
+
 Check container status and logs:
 ```bash
 systemctl --user status container-web.service
-podman exec -it web bash
-curl localhost:8080
+podman exec -it web bash          # enter container to inspect/debug
+curl localhost:8080               # test apache from inside the container
 journalctl | grep container-web.service
 ```
 
