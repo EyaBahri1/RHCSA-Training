@@ -60,11 +60,13 @@ passwd webadmin
 loginctl enable-linger webadmin
 mkdir /home/webadmin/html
 echo 'hi' > /home/webadmin/html/index.html
+
 chown webadmin:webadmin /home/webadmin/html /home/webadmin/html/index.html
 # --- as webadmin ---
 ssh webadmin@localhost
 podman pull registry.access.redhat.com/ubi9/httpd-24
 podman run -d --name web -p 8081:8080 -v /home/webadmin/html:/var/www/html:Z image_id
+
 mkdir -p ~/.config/systemd/user
 cd ~/.config/systemd/user
 podman generate systemd --name web --files --new
