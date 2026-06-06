@@ -53,31 +53,37 @@ Requirements:
 
 Steps:
 ```bash
+# --- as root ---
+dnf install -y podman container-tools
 useradd webadmin
 passwd webadmin
 loginctl enable-linger webadmin
 mkdir /home/webadmin/html
 echo 'hi' > /home/webadmin/html/index.html
 chown webadmin:webadmin /home/webadmin/html /home/webadmin/html/index.html
+# --- as webadmin ---
 ssh webadmin@localhost
 podman pull registry.access.redhat.com/ubi9/httpd-24
 podman run -d --name web -p 8081:8080 -v /home/webadmin/html:/var/www/html:Z image_id
 mkdir -p ~/.config/systemd/user
 cd ~/.config/systemd/user
 podman generate systemd --name web --files --new
+# edit container-web.service: change Restart=on-failure → Restart=always
+
 systemctl --user daemon-reload
 systemctl --user enable --now container-web.service
-curl localhost:8081
-podman exec -it web /bin/bash
-bash-5.1$ curl localhost:8080
+
+curl localhost:8081   # test from host
 
 ```
 Check container status and logs:
 ```bash
 systemctl --user status container-web.service
-podman exec -it web bash
+
+podman exec -it web /bin/bash
 curl localhost:8080
-#As root 
+
+#as root 
 journalctl | grep container-web.service
 ```
 
