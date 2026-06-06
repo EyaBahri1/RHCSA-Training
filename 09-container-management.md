@@ -83,10 +83,11 @@ Check container status and logs:
 systemctl --user status container-web.service
 
 podman exec -it web /bin/bash
-curl localhost:8080
+curl localhost:8080   # test from inside the container
 
-#as root 
-journalctl | grep container-web.service
+journalctl --user | grep container-web.service  # as webadmin
+journalctl | grep container-web.service   #as root 
+
 ```
 
 ### PDF Converter Container
