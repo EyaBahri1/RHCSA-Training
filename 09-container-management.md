@@ -94,6 +94,7 @@ journalctl | grep container-web.service   #as root
 
 This container runs a Python script `pdf_converter.py` to convert text files to PDFs using Podman.
 
+```bash
 # --- as root ---
 dnf install podman container-tools
 useradd pod && passwd pod
@@ -134,3 +135,4 @@ exit
 # --- after reboot ---
 reboot
 journalctl | grep container-pdfconverter.service
+```
