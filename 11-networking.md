@@ -47,6 +47,7 @@ nameserver <DNS_server_IP>
 - Check current default: `systemctl get-default`
 
 ### Tuned (Performance Profiles)
+*Tuned is a dynamic tuning service that optimizes system performance, power consumption, or virtualization settings using predefined profiles.*
 - Install tuned: `dnf install tuned`
 - See recommended profile: `tuned-adm recommend`
 - View active profile: `tuned-adm active`
