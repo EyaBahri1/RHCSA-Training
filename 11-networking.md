@@ -6,7 +6,7 @@
 ### nmtui (Text UI for NetworkManager)
 👋 In this section, we will explore how to modify some network parameters.
 
-- Change hostname: `hostnamectl hostname name.example.com`
+- Change hostname: `hostnamectl set-hostname name.example.com`
 - Use GUI with `nmtui` to set the system hostname
 - Edit network settings with `nmtui` > Edit a connection > Set IPs, Gateway, DNS manually
 - Don't forget to deactivate and reactivate the interface afterward
@@ -15,6 +15,15 @@
 nmtui
 -> edit a connection -> manual settings -> apply
 -> deactivate -> activate
+```
+### Verification
+```bash
+ip a
+ip r
+hostnamectl
+nmcli dev status # interface status (connected/disconnected)
+nmcli con show # show connections
+nmcli con show ens160 | grep autoconnect # verify autoconnect setting
 ```
 
 ### Target (Runlevel)
