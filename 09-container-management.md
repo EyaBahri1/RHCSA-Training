@@ -19,61 +19,35 @@
 
 ### Rsyslog Container
 
-## As root
-
-```bash
-dnf install -y podman container-tools
-useradd user1 && passwd user1
-loginctl enable-linger user1       # keep user1 services alive after logout/reboot
-mkdir /local_path && chown user1:user1 /local_path
-```
-
-## As user1 — SSH only (not `su`)
-
-```bash
-ssh user1@localhost
-```
-
-## Get the image
-
-```bash
-# Option A — registry
-podman login registry.redhat.io
-podman pull <image_url>
-
-# Option B — build (exam)
-wget <containerfile_url>
-podman build -t imageName .
-```
-
-## Run the container — needed as template for systemd
-
-```bash
-podman run -d --name rsyslog -v /local_path:/var/log:Z <image_id>
-# :Z sets SELinux context on the bind mount (required on RHEL)
-podman ps
-```
-
-> `podman generate systemd` reads this container's config (image, volumes, ports…) to generate the service file. Without it, the command fails.
-
-## Create & configure the systemd service
-
-```bash
-mkdir -p ~/.config/systemd/user && cd ~/.config/systemd/user
-podman generate systemd --name rsyslog --files --new
-# --new: service will recreate the container from scratch on each start
-vi container-rsyslog.service      # change Restart=on-failure → Restart=always
-systemctl --user daemon-reload    # always reload after editing a .service file
-systemctl --user enable --now container-rsyslog.service
-```
-
-## Verify
-
-```bash
-systemctl --user status container-rsyslog.service
-journalctl | grep container-rsyslog.service   # as root
-```
-
+- Install required packages: `dnf install podman container-tools`
+- Create user: `useradd user1`, then `passwd user1`
+- Allow user processes to persist after logout: `loginctl enable-linger user1`
+- Create and set permissions on local directory: `mkdir /local_path`, then `chown user1:user1 /local_path`
+- SSH into the user: `ssh user1@localhost` #SSH only (not `su`)
+- Connect to registry and pull image:
+  - `podman login registry.redhat.io`
+  - `podman search rsyslog`
+  - `podman pull image_url`
+  - Or for exams:
+    - `wget <dockerfile_path>`
+    - `podman build -t imageName .`
+    - `podman images`
+- Run and map container: 
+  - `podman run -d --name container_name -v /local_path:/container_path:Z image_id`
+     # :Z sets SELinux context on the bind mount (required on RHEL)
+  - Example: `podman run -d --name rsyslog -v /local_path:/var/log:Z image_id`
+ > `podman generate systemd` reads this container's config (image, volumes, ports…) to generate the service file. Without it, the command fails.
+- Display containers: `podman ps`
+- Run container as a user service (systemd):
+  - `mkdir -p /home/user1/.config/systemd/user`
+  - `cd /home/user1/.config/systemd/user`
+  - `podman generate systemd --name container_name --files --new`
+  - Edit the generated service file to use `restart=always`
+  - Reload and enable service: 
+    - `systemctl --user daemon-reload`
+    - `systemctl --user enable --now service_name`
+  - After reboot: `systemctl --user status service_name`
+  - Check logs as root: `journalctl | grep container-rsyslog.service`
 
 ### Apache Container
 <p align="center">
