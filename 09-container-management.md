@@ -4,10 +4,6 @@
 ## Introduction
 👋 In this section, we will explore how to manage containers: rsyslog, http, and pdf-converter.
 <p align="center">
-  <img src="images/Container.JPG" alt="cap" style="width: 600px;"/>
-</p>  
-
-<p align="center">
   <img src="images/docker.png" alt="cap" style="width: 600px;"/>
 </p> 
 1. Pull a container image (or build one)  
