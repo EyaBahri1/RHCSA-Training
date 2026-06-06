@@ -56,38 +56,38 @@ Requirements:
 - Map `/home/webadmin/html` to `/var/www/html` in the container
 
 Steps:
-```bash
-useradd webadmin
-passwd webadmin
-loginctl enable-linger webadmin                                          # keep services alive after logout/reboot
-mkdir /home/webadmin/html
-echo 'hi' > /home/webadmin/html/index.html                              # test page to verify the bind mount works
-chown webadmin:webadmin /home/webadmin/html /home/webadmin/html/index.html
-ssh webadmin@localhost                                                   # SSH only, not su
-podman pull registry.access.redhat.com/ubi9/httpd-24
-podman run -d --name web \
-  -p 8081:8080 \                                                        # host:container port mapping
-  -v /home/webadmin/html:/var/www/html:Z \                              # :Z sets SELinux context
-  image_id                                                              # serves as template for generate systemd
-mkdir -p ~/.config/systemd/user
-cd ~/.config/systemd/user
-podman generate systemd --name web --files --new                        # --new: recreates container from scratch on each start
-# edit container-web.service: change Restart=on-failure → Restart=always
-systemctl --user daemon-reload                                          # always reload after editing .service file
-systemctl --user enable --now container-web.service
-curl localhost:8081                                                     # test from host side (port 8081)
-podman exec -it web /bin/bash                                           # enter the container
-bash-5.1$ curl localhost:8080                                           # test from inside the container (port 8080)
-```
-
-Check container status and logs:
-```bash
-systemctl --user status container-web.service
-podman exec -it web bash          # enter container to inspect/debug
-curl localhost:8080               # test apache from inside the container
-journalctl | grep container-web.service
-```
-
+- Install required packages: `dnf install -y podman container-tools`
+- Create user: `useradd webadmin`, then `passwd webadmin`
+- Allow user processes to persist after logout: `loginctl enable-linger webadmin`
+- Create and set permissions on local directory:
+  - `mkdir /home/webadmin/html`
+  - `echo 'hi' > /home/webadmin/html/index.html` # test page to verify the bind mount works
+  - `chown webadmin:webadmin /home/webadmin/html /home/webadmin/html/index.html`
+- SSH into the user: `ssh webadmin@localhost` # SSH only (not `su`)
+- Pull image: `podman pull registry.access.redhat.com/ubi9/httpd-24`
+- Run and map container:
+  - `podman run -d --name web -p 8081:8080 -v /home/webadmin/html:/var/www/html:Z image_id`
+  - `-p 8081:8080` # host:container port mapping
+  - `-v ...:/var/www/html:Z` # :Z sets SELinux context on the bind mount (required on RHEL)
+  > `podman generate systemd` reads this container's config (image, volumes, ports…) to generate the service file. Without it, the command fails.
+- Display containers: `podman ps`
+- Run container as a user service (systemd):
+  - `mkdir -p ~/.config/systemd/user`
+  - `cd ~/.config/systemd/user`
+  - `podman generate systemd --name web --files --new` # --new: service will recreate the container from scratch on each start
+  - Edit the generated service file: change `Restart=on-failure` → `Restart=always`
+  - Reload and enable service:
+    - `systemctl --user daemon-reload` # always reload after editing a .service file
+    - `systemctl --user enable --now container-web.service`
+- Test from host: `curl localhost:8081`
+- Test from inside the container:
+  - `podman exec -it web /bin/bash`
+  - `curl localhost:8080`
+- Check status and logs:
+  - Check service status : `systemctl --user status container-web.service`
+  - Check logs as webadmin:  `journalctl --user | grep container-web.service` # as webadmin
+  - Check logs as root: `journalctl | grep container-web.service`
+    
 ### PDF Converter Container
 <p align="center">
   <img src="images/pdf.JPG" alt="cap" style="width: 600px;"/>
