@@ -33,8 +33,7 @@
     - `podman build -t imageName .`
     - `podman images`
 - Run and map container: 
-  - `podman run -d --name container_name -v /local_path:/container_path:Z image_id`
-     # :Z sets SELinux context on the bind mount (required on RHEL)
+  - `podman run -d --name container_name -v /local_path:/container_path:Z image_id` # :Z sets SELinux context on the bind mount (required on RHEL)
   - Example: `podman run -d --name rsyslog -v /local_path:/var/log:Z image_id`
  > `podman generate systemd` reads this container's config (image, volumes, ports…) to generate the service file. Without it, the command fails.
 - Display containers: `podman ps`
