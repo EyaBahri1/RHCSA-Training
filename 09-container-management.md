@@ -3,12 +3,10 @@
 
 ## Introduction
 👋 In this section, we will explore how to manage containers: rsyslog, http, and pdf-converter.
-<p align="center">
-  <img src="images/docker.png" alt="cap" style="width: 600px;"/>
-</p> 
-1. Pull a container image (or build one)  
-2. Run a container as a rootless user  
-3. Map the container to a local directory  
+
+1. Pull or build a container image
+2. Run the container as a rootless user with a bind mount
+3. Configure the container as a persistent systemd user service
 <p align="center">
   <img src="images/map.JPG" alt="cap" style="width: 600px;"/>
 </p>  
