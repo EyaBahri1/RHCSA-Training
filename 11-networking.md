@@ -17,13 +17,24 @@ nmtui
 -> deactivate -> activate
 ```
 ### Verification
+
 ```bash
-ip a
-ip r
-hostnamectl
-nmcli dev status # interface status (connected/disconnected)
-nmcli con show # show connections
-nmcli con show ens160 | grep autoconnect # verify autoconnect setting
+ip a                         # IP addresses
+ip r                         # routes / gateway
+hostnamectl                  # hostname
+nmcli dev status             # interface status
+nmcli con show               # connections
+nmcli con show ens160 | grep autoconnect
+```
+### Name Resolution
+
+```text
+/etc/hosts
+<IP_address> <hostname>
+
+/etc/resolv.conf
+search <domain>
+nameserver <DNS_server_IP>
 ```
 
 ### Target (Runlevel)
