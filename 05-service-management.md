@@ -20,7 +20,7 @@ Note: Well-known ports: numbered from 0 to 1023, they are associated with standa
 
 #### Connect to another machine via SSH using a password:
 
-**On the server machine:**
+On the server machine:
 * `yum install openssh-server` → installs the SSH server
 * `systemctl enable sshd`
 * `systemctl start sshd` → start and enable the SSH service
@@ -29,10 +29,10 @@ Note: Well-known ports: numbered from 0 to 1023, they are associated with standa
 * `firewall-cmd --reload`
 * `firewall-cmd --list-ports` → open SSH port 22 for incoming connections
 
-**On the client machine:**
+On the client machine:
 * `ssh username@server_ip_address` → connect using password
 
-  **Optional** — instead of using the IP, assign a hostname:
+  Optional — instead of using the IP, assign a hostname:
 * `vim /etc/hosts` → add: `server_ip    hostname`
 * `ssh username@hostname` → connect using the hostname instead of the IP
   
