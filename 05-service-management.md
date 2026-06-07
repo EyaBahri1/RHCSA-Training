@@ -20,24 +20,28 @@ Note: Well-known ports: numbered from 0 to 1023, they are associated with standa
 
 #### Connect to another machine via SSH using a password:
 
-* `yum install openssh-server` → installs the SSH server (on the server machine).
+**On the server machine:**
+* `yum install openssh-server` → installs the SSH server
 * `systemctl enable sshd`
-* `sudo systemctl start sshd` → start and enable the SSH service (on the server machine).
-  Note: On Red Hat, every service is protected by two default security layers: the **Firewall** (`Firewalld`) and **SELinux** (Security-Enhanced Linux).
+* `systemctl start sshd` → start and enable the SSH service
+
+  > Note: On Red Hat, every service is protected by two default security layers: the **Firewall** (`Firewalld`) and **SELinux** (Security-Enhanced Linux).
 
 <p align="center">
   <img src="images/word-image.png" alt="cap" style="width: 400px;"/>
-</p>  
+</p>
 
+* `firewall-cmd --add-port=22/tcp --permanent`
+* `firewall-cmd --reload`
+* `firewall-cmd --list-ports` → open SSH port 22 for incoming connections
 
-* `firewall-cmd --add-port=22/tcp --permanent`  
-* `firewall-cmd --reload`  
-* `firewall-cmd --list-ports` → open SSH port for incoming connections (on the client machine).  
-* `ssh username@server_ip_address` → test SSH connection (on the client machine; user must have a password), or  
-* `vim /etc/hosts`  
-  `client_ip    hostname` → assign a hostname to each machine’s IP address.  
-* `ssh user_client@hostname`  
+**On the client machine:**
+* `ssh username@server_ip_address` → connect using password
 
+  **Optional** — instead of using the IP, assign a hostname:
+* `vim /etc/hosts` → add: `server_ip    hostname`
+* `ssh username@hostname` → connect using the hostname instead of the IP
+  
 #### Connect without a password (key-based authentication):
 
 To allow passwordless login, generate and configure SSH keys on machine B and copy them to the server. This allows the server to recognize and authorize connections from machine B.
