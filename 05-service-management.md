@@ -13,7 +13,7 @@
 <p align="center">
   <img src="images/ssh.JPG" alt="cap" style="width: 600px;"/>
 </p>  
-In simple terms, SSH allows a user to connect securely to another computer, as if they were physically in front of it. It uses strong encryption to secure communication between the two machines, protecting exchanged data including credentials and commands from interception.  
+In simple terms, SSH allows a user to connect securely to another computer, as if they were physically in front of it. It uses strong encryption to secure communication between the two machines, protecting exchanged data including credentials and commands from interception.
 Note: Well-known ports: numbered from 0 to 1023, they are associated with standard services like HTTP (port 80) and SSH (port 22)...
 
 ### Practice:
