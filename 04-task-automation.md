@@ -36,10 +36,18 @@ The `crontab` command allows you to schedule tasks to run automatically at regul
 ## Lab 05
 
 #### Q0. Delete the contents of /tmp every Wednesday at 3:15 PM and at 12:30 PM for user1.
-
 ```bash
 crontab -e -u user1
-30,15 12,15 * * 3 rm -rf /tmp
+# add (option 1 — two separate lines):
+15 15 * * 3 /usr/bin/rm -rf /tmp/*
+30 12 * * 3 /usr/bin/rm -rf /tmp/*
+
+# add (option 2 — one line, same result):
+15 15 * * 3 /usr/bin/rm -rf /tmp/*; 30 12 * * 3 /usr/bin/rm -rf /tmp/*
+
+# verify
+crontab -l -u user1     # as root — view user1's crontab
+crontab -l              # as user1 — view current user's crontab
 ```
 
 #### Q1. Execute the script `backup.sh` at every system reboot.
