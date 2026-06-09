@@ -44,6 +44,10 @@ To allow passwordless login, generate and configure SSH keys on machine B and co
 * `ssh-copy-id user@server_machine` → copy the public key to the server; adds it to the `authorized_keys` file in the user's `.ssh` directory.
 * `ssh user@server_machine`
 
+Required permissions on server:
+* `chmod 700 ~/.ssh`
+* `chmod 600 ~/.ssh/authorized_keys`
+
 #### Connect via a port other than 22:
 
 On the server side:
@@ -56,6 +60,29 @@ On the server side:
 * `systemctl restart sshd` → restart the SSH service.
   On the client side:
 * `ssh user@server_address -p 2222` → connect using the new port.
+  
+#### Harden SSH access (sshd_config options):
+
+* Disable root login:
+  * `vim /etc/ssh/sshd_config` → set `PermitRootLogin no`
+* Force key-based auth only (disable password login):
+  * `vim /etc/ssh/sshd_config` → set `PasswordAuthentication no`
+* Restrict SSH to specific users:
+  * `vim /etc/ssh/sshd_config` → add `AllowUsers user1 user2`
+* After any change:
+  * `systemctl restart sshd`
+* Verify sshd is listening on the correct port:
+  * `ss -tlnp | grep sshd`
+
+ #### Create a custom firewalld service (e.g. HTTP on port 8082):
+
+* `cp /usr/lib/firewalld/services/http.xml /etc/firewalld/services/myhttp.xml`
+* `vim /etc/firewalld/services/myhttp.xml` → change port `80` to `8082` and update the service name
+* `semanage port -a -t http_port_t -p tcp 8082` → register new port in SELinux
+* `firewall-cmd --reload` → load the new service definition
+* `firewall-cmd --add-service=myhttp --permanent`
+* `firewall-cmd --reload`
+* `firewall-cmd --list-services` → verify 
 
 ---
 
