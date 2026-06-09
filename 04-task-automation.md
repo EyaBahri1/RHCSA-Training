@@ -43,7 +43,7 @@ crontab -e -u user1
 30 12 * * 3 /usr/bin/rm -rf /tmp/*
 
 # add (option 2 — one line, same result):
-15 15 * * 3 /usr/bin/rm -rf /tmp/*; 30 12 * * 3 /usr/bin/rm -rf /tmp/*
+15,30 15,12 * * 3 /usr/bin/rm -rf /tmp/*
 
 # verify
 crontab -l -u user1     # as root — view user1's crontab
