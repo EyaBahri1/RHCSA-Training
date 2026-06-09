@@ -1,21 +1,15 @@
 <h1 align="center" style="color: red;">Service Management</h1>
 
 ## Introduction
-
 👋 In this section, we will learn how to configure and manage the **SSHD**, **HTTPD**, and **NTP** services.
-
----
 
 ## SSHD Service:
 
 ### Theory:
 
-<p align="center">
-  <img src="images/ssh.JPG" alt="cap" style="width: 600px;"/>
-</p>  
-In simple terms, SSH allows a user to connect securely to another computer, as if they were physically in front of it. It uses strong encryption to secure communication between the two machines, protecting exchanged data including credentials and commands from interception.
-Note: Well-known ports: numbered from 0 to 1023, they are associated with standard services like HTTP (port 80) and SSH (port 22)...
-
+SSH allows a user to connect securely to a remote machine and run commands on it.
+All communication is encrypted — credentials and commands can't be intercepted.
+> Well-known ports (0–1023) are reserved for standard services: HTTP (80), HTTPS (443), SSH (22).
 ### Practice:
 
 #### Connect to another machine via SSH using a password:
@@ -78,16 +72,10 @@ On the server side:
 ## HTTPD Service:
 
 ### Theory:
-
-<p align="center">
-  <img src="images/web.JPG" alt="cap" style="width: 600px;"/>
-</p>  
-The web server stores all files needed to deliver website content, including static pages and dynamic applications. Its role is to serve files and manage interactions between the user's browser and the website's resources.  
-An HTTP (GET) request is like sending a command to the server to fetch a specific file (e.g. "index.html"), and the HTTP response is the server sending back the requested content.
-
-* `/var/www/html` is the default directory for web content.
-* `"index.html"` is the homepage or landing file of a website.
-
+A web server serves files (HTML, images, apps) to browsers via HTTP.
+- Browser sends `GET /index.html` → server responds with the file content.
+- 
+> Default web root: `/var/www/html` — `index.html` is the default landing page.
 ### Practice:
 
 * `dnf install httpd`
@@ -133,16 +121,11 @@ Once the web server is running and `index.html` is in `/var/www/html`, accessing
 * `systemctl restart httpd`
 * `curl localhost/test.html` or `curl http://host_ip/test.html`
   (If it doesn't work, try `chown -R apache:apache /var1`)
-
 ---
 
 ## NTP Service:
 
 ### Theory:
-
-<p align="center">
-  <img src="images/ntp.JPG" alt="cap" style="width: 600px;"/>
-</p>  
 An NTP server provides accurate time to client computers on a network. It maintains precise time by regularly syncing with atomic or GPS time sources and responds to client requests with high accuracy.
 
 ### Practice:
@@ -178,8 +161,3 @@ Set a time zone:
 * `timedatectl list-timezones`
 * `timedatectl set-timezone <zone>`
 * `timedatectl`
-
-<p style="text-align: right;">
-  <a href="https://github.com/halekammoun/RHCSA-Training/blob/main/README.md#table-des-matieres">Back to Table of Contents</a>
-</p>
-
