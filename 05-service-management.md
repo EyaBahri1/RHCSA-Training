@@ -28,11 +28,13 @@ On the server machine:
 * `firewall-cmd --add-port=22/tcp --permanent`
 * `firewall-cmd --reload`
 * `firewall-cmd --list-ports` → open SSH port 22 for incoming connections
-
+* Verify sshd is listening on the correct port:
+  * `ss -tlnp | grep sshd`
+    
 On the client machine:
 * `ssh username@server_ip_address` → connect using password
 
-  Optional — instead of using the IP, assign a hostname:
+Optional — instead of using the IP, assign a hostname:
 * `vim /etc/hosts` → add: `server_ip    hostname`
 * `ssh username@hostname` → connect using the hostname instead of the IP
   
@@ -71,8 +73,6 @@ On the server side:
   * `vim /etc/ssh/sshd_config` → add `AllowUsers user1 user2`
 * After any change:
   * `systemctl restart sshd`
-* Verify sshd is listening on the correct port:
-  * `ss -tlnp | grep sshd`
 ---
 
 ## HTTPD Service:
