@@ -73,17 +73,6 @@ On the server side:
   * `systemctl restart sshd`
 * Verify sshd is listening on the correct port:
   * `ss -tlnp | grep sshd`
-
- #### Create a custom firewalld service (e.g. HTTP on port 8082):
-
-* `cp /usr/lib/firewalld/services/http.xml /etc/firewalld/services/myhttp.xml`
-* `vim /etc/firewalld/services/myhttp.xml` → change port `80` to `8082` and update the service name
-* `semanage port -a -t http_port_t -p tcp 8082` → register new port in SELinux
-* `firewall-cmd --reload` → load the new service definition
-* `firewall-cmd --add-service=myhttp --permanent`
-* `firewall-cmd --reload`
-* `firewall-cmd --list-services` → verify 
-
 ---
 
 ## HTTPD Service:
