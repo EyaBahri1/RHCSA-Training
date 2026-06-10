@@ -12,9 +12,15 @@ The `crontab` command allows you to schedule tasks to run automatically at regul
 * `crontab -e -u username`: to edit the crontab of a specific user.
 * `cat /etc/crontab`: to view the current configuration details.
 
-<p align="center">
-  <img src="images/Capture.JPG" alt="cap" style="width: 800px;"/>
-</p>  
+
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name  command to be executed
 
 ### Time Intervals
 
