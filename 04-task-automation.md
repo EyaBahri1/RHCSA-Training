@@ -48,13 +48,8 @@ crontab -l              # as user1 — view current user's crontab
 
 #### Q1. Execute the script `backup.sh` at every system reboot.
 ```bash
-# option 1 — crontab user courant
 crontab -e
 @reboot /usr/bin/bash /path/backup.sh
-
-# option 2 — crontab système (faut spécifier le user)
-vi /etc/crontab
-@reboot root /usr/bin/bash /path/backup.sh
 ```
 
 #### Q2. Write the message “hello” into `hello.txt` every 3 minutes.
