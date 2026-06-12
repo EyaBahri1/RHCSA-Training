@@ -14,6 +14,7 @@
 * **/etc/default/useradd**: Contains default user settings.
 * **\~/.bash\_profile** & **\~/.bashrc**: Used to add user-specific environment variables.
 * **/etc/security/pwquality.conf**: Used to configure password strength (as root).
+* **/etc/sudoers**: Defines sudo privileges for users and groups — edit with `visudo`.
 
 ## Useful Commands
 
