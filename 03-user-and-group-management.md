@@ -74,7 +74,7 @@ UID_MAX 3000
 
 ```bash
 useradd student
-passwd student
+echo tekup | passwd --stdin student 
 ```
 
 **Q2.** Set default umask to 013 for 'student':
