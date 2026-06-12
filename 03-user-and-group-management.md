@@ -59,19 +59,6 @@
   * `-R`: Recursively apply to directory.
   * `chown newowner filename`: Change file owner.
   * `chown :newgroup filename`: Change group owner.
-  
-### umask — default permission mask
-umask defines permissions **removed by default from a specific user** (max 666 for files, 777 for dirs).
-* To set permanently for a user, add to `~/.bashrc`:
-```bash
-umask 0022        # 0 prefix = no special bits
-```
-### Special bits
-| bit | octal | set with | effect on file | effect on directory |
-|-----|-------|----------|---------------|-------------------|
-| setuid | 4 | `chmod u+s` | runs as owner | no effect |
-| setgid | 2 | `chmod g+s` | runs as group | new files inherit group |
-| sticky | 1 | `chmod +t` | no effect | only owner can delete |
 
 ## Lab 03
 
@@ -169,13 +156,9 @@ Result:
 * Others: `r--`
 
 ## Special Permissions
-SUID gives a user temporary access to run a file as the file’s owner.
-
-
-SGID ensures files created in a directory inherit the group of the directory.
-
-
-The sticky bit is used on shared directories so that only the file’s owner or root can delete files.
+- SUID gives a user temporary access to run a file as the file’s owner.
+- SGID ensures files created in a directory inherit the group of the directory.
+- The sticky bit is used on shared directories so that only the file’s owner or root can delete files.
 
 * **SUID (4000)**: Run file with owner's privileges.
 
