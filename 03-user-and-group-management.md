@@ -112,18 +112,11 @@ sudo chown :tekup fich
 * Default umask: 0022
 
 **Changing umask:**
-
 * Temporary: `umask 027`
 * Persistent (system-wide): Add to `/etc/login.defs`
 * Persistent (user-specific): Add to `~/.bashrc`
 
-**Permission calculation:**
-
-* Default = 777 - umask
-* umask = 777 - desired default
-
 ### Example:
-
 
 **Default directory ad file permissions with umask = 013**
 Result:
