@@ -203,74 +203,110 @@ setfacl -m u:friend:r,g:colleagues:rw,o:- confidential
 ```
 
 ---
-
 # **Evaluation Lab 01**
 
+#### Q1. Create groups redhat and tekup
 ```bash
-Q1. Create groups:
 groupadd redhat
 groupadd tekup
+```
 
-Q2. Create users:
-useradd foulen1
-useradd foulen2
-useradd foulen3
-passwd foulen1
-passwd foulen2
-passwd foulen3
+#### Q2. Create users foulen1, foulen2, foulen3 with specific UID, comment, shell, home, and groups
+```bash
+useradd foulen1 && passwd foulen1
+useradd foulen2 && passwd foulen2
+useradd foulen3 && passwd foulen3
 usermod -u 1300 -c guest foulen1
 usermod -s /bin/bash foulen2
 usermod -u 1301 -d /home/test foulen3
 usermod -g tekup foulen1
 usermod -g redhat -G tekup foulen2
 usermod -G redhat -aG tekup foulen3
+```
 
-Q3. foulen2 account expires April 5, 2030 with min password age 5, warning 7:
+#### Q3. foulen2 account expires April 5, 2030 with min password age 5, warning 7
+```bash
 chage -E 2030-04-05 -m 5 -W 7 foulen2
+```
 
-Q4. foulen2 password expires March 23, 2025:
-# Calculate days from today to 2025-03-23
-chage -M [days] foulen2
-chage -l foulen2
+#### Q4. foulen2 password expires March 23, 2025
+```bash
+chage -M [days] foulen2    # calculate days from today to 2025-03-23
+chage -l foulen2           # verify
+```
 
-Q5. Create directory `/home/tekup`:
+#### Q5. Create directory `/home/tekup` owned by group redhat, group rx only, no others, setgid + sticky
+```bash
 mkdir /home/tekup
 chown :redhat /home/tekup
 chmod g=rx /home/tekup
 chmod o= /home/tekup
 chmod g+s,o+t /home/tekup
+```
 
-Q6. Copy `/etc/passwd` to `/tmp`, give foulen1 rw, foulen2 none:
+#### Q6. Copy `/etc/passwd` to `/tmp`, give foulen1 rw access, foulen2 no access via ACL
+```bash
 cp /etc/passwd /tmp/
 setfacl -m u:foulen1:rw,u:foulen2:- /tmp/passwd
+```
 
-Q7. Copy all files owned by "user" to `/opt/dir`:
+#### Q7. Copy all files owned by "user" to `/opt/dir`
+```bash
 find / -type f -user user -exec cp -a {} /opt/dir \;
+```
 
-Q8. Copy `/etc/shadow` to `/home/tekup`, extract “!!” lines:
+#### Q8. Copy `/etc/shadow` to `/home/tekup`, extract lines containing "!!" into a file
+```bash
 cp /etc/shadow /home/tekup/
 grep "!!" /home/tekup/shadow > nopass
+```
 
-Q9. All user passwords expire after 500 days:
+#### Q8b. From the copied shadow file, delete all lines containing "!!"
+```bash
+sed -i '/!!/d' /home/tekup/shadow
+```
+
+#### Q8c. In the copied shadow file, replace "!!" with "NOPASS"
+```bash
+sed -i 's/!!/NOPASS/g' /home/tekup/shadow
+```
+
+#### Q9. Set all new user passwords to expire after 500 days globally
+```bash
 vim /etc/login.defs
-PASS_MAX_DAYS 500
+# set: PASS_MAX_DAYS 500
+```
 
-Q10. Password must contain 1 uppercase and 2 digits:
+#### Q10. Password must contain at least 1 uppercase and 2 digits
+```bash
 vim /etc/security/pwquality.conf
+# set:
 ucredit = -1
 dcredit = -2
+```
 
-Q11. Set minimum password length to 9:
-minlen = 9
+#### Q11. Set minimum password length to 9
+```bash
+vim /etc/security/pwquality.conf
+# set: minlen = 9
+```
 
-Q12. foulen3 password expires after 20 days:
+#### Q12. foulen3 password expires after 20 days
+```bash
 chage -M 20 foulen3
-chage -l foulen3
+chage -l foulen3           # verify
+```
 
-Q13. Files created by foulen2 should be `r--rw-r--`:
-vim /home/foulen2/.bash_profile
-umask 202
+#### Q13. Files created by foulen2 should have permissions `r--rw-r--`
+```bash
+su - foulen2
+vim ~/.bashrc
+# add: umask 0202
+# verify
+umask
+```
 
-Q14. Lock user foulen1:
+#### Q14. Lock user foulen1
+```bash
 usermod -L foulen1
 ```
