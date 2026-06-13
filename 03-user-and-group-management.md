@@ -10,7 +10,7 @@
 * **/etc/passwd**: Contains user information.
 * **/etc/group**: Contains group information.
 * **/etc/skel**: Template for new user home directories.
-* **/etc/login.defs**: Contains user creation settings.
+* **/etc/login.defs**: Contains user creation settings (visudo).
 * **/etc/default/useradd**: Contains default user settings.
 * **\~/.bash\_profile** & **\~/.bashrc**: Used to add user-specific environment variables.
 * **/etc/security/pwquality.conf**: Used to configure password strength (as root).
