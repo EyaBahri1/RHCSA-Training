@@ -156,23 +156,18 @@ Result:
 
 ## Lab 04
 
-**Q0.** Create `test_directory` with full control to owner, inherit group, restrict delete:
-
 ```bash
-chmod 3700 test_directory
-# or step-by-step
+# Q0. Create test_directory with full control to owner, inherit group, restrict delete
+mkdir test_directory
+chmod 3700 test_directory        # or step-by-step:
 chmod u=rwx,o=- test_directory
-chmod g+s test_directory
-chmod o+t test_directory
-```
+chmod g+s test_directory         # inherit group (setgid)
+chmod o+t test_directory         # restrict delete (sticky bit)
 
-**Q1.** File "confidential": allow user "friend" to read, group "colleagues" to read/write, no access to others:
-
-```bash
+# Q1. File "confidential": allow user "friend" to read, group "colleagues" to read/write, no access to others
 setfacl -m u:friend:r,g:colleagues:rw,o:- confidential
 ```
 
----
 ## Lab 01
 ```bash
 # Q1. Create groups redhat and tekup
