@@ -61,58 +61,35 @@
   * `chown :newgroup filename`: Change group owner.
 
 ## Lab 03
-
-**Q0.** Set UID range for new users between 1000 and 3000:
-
 ```bash
+# Q0. Set UID range for new users between 1000 and 3000
 vim /etc/login.defs
-UID_MIN 1000
-UID_MAX 3000
-```
+# UID_MIN 1000
+# UID_MAX 3000
 
-**Q1.** Create user 'student' with password 'tekup':
-
-```bash
+# Q1. Create user 'student' with password 'tekup'
 useradd student
-echo tekup | passwd --stdin student 
-```
+echo tekup | passwd --stdin student
 
-**Q2.** Set default umask to 013 for 'student':
-
-```bash
+# Q2. Set default umask to 013 for 'student'
 su - student
-vim .bashrc
-umask 0013
+vim .bashrc                  # add: umask 0013
 exit
-su student
-umask
-```
+su - student
+umask                        # verify
 
-**Q3.** Add 'student' to secondary group 'tekup':
-
-```bash
+# Q3. Add 'student' to secondary group 'tekup'
 groupadd tekup
 usermod -G tekup student
-```
 
-**Q4.** Give 'student' sudo access without password:
+# Q4. Give 'student' sudo access without password
+echo "student ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-```bash
-echo “student ALL=(ALL) NOPASSWD:ALL” >> /etc/sudoers
-# or edit manually
-vim /etc/sudoers
-```
-
-**Q5.** As 'student', create file 'fich':
-
-```bash
+# Q5. As 'student', create file 'fich'
 su - student
 touch fich
-```
 
-**Q6.** Change group ownership of 'fich' to 'tekup':
-
-```bash
+# Q6. Change group ownership of 'fich' to 'tekup'
 sudo chown :tekup fich
 ```
 
@@ -203,7 +180,7 @@ setfacl -m u:friend:r,g:colleagues:rw,o:- confidential
 ```
 
 ---
-# Lab 01
+## Lab 01
 ```bash
 # Q1. Create groups redhat and tekup
 groupadd redhat && groupadd tekup
