@@ -5,20 +5,11 @@
 
 ## NFS:
 
-### Theory:
-<p align="center">
-  <img src="images/nfs.JPG" alt="cap" style="width: 700px;"/>
-</p> 
-
 File server?  
 A computer responsible for storage so that other computers on the same network can access the files, via Network share: NFS (Network share protocol in Linux).  
 
 How to use the NFS service?  
 The server exports the directory, then the client mounts the NFS filesystem.
-
-Any service has layered protection:
-- **firewall**: controlled using `firewalld-cmd` (default: rules are blocked),
-- **SELinux**: controlled using the `semanage` command (Security-Enhanced Linux).
 
 ### Practice:
 **Server-side** (must be root: `su -`):
@@ -63,10 +54,6 @@ Any service has layered protection:
 
 ### Theory:
 
-<p align="center">
-  <img src="images/autofs.png" alt="cap" style="width: 400px;"/>
-</p> 
-
 What is Autofs?
 
 On-demand NFS or automatic mount of a shared directory.  
@@ -77,7 +64,6 @@ Autofs allows on-demand mounting of filesystems such as NFS when users access sp
 
 **Use Case:**  
 To share a home directory from the server so the user can use it when logging in on the client.
-
 ---
 
 ### Q0. Create a user named `john` on both machines with UID 2001. His home directory on the server is `/host/john`. It will be mounted on `/host/john` using Autofs when John logs in.
