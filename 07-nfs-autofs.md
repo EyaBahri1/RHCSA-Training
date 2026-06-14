@@ -85,26 +85,29 @@ To share a home directory from the server so the user can use it when logging in
 **Note**: the user must have a base directory on the server, but not on the client (for testing).
 
 **Server-side:**
-- `dnf install nfs*`
-- `useradd -u 2001 -b /host john` → create the user's base directory
-- `echo “/host 	*(rw,no_root_squash)” >> /etc/exports` → export the base directory
-- `firewall-cmd --add-service=rpc-bind --permanent`
-- `firewall-cmd --add-service=mountd --permanent`
-- `firewall-cmd --add-service=nfs --permanent`
-or simply:
+- `dnf install nfs-utils -y`
+- `systemctl enable --now nfs-server`
+- `useradd -u 2001 -d /host/john john` → creates the user AND its home directory `/host/john` automatically
+- `chown john:john /host/john` → applies correct permissions on the directory
+- `echo "/host *(rw,no_root_squash,sync)" >> /etc/exports` → exports the directory
+- `exportfs -arv` → applies the exports
 - `firewall-cmd --add-service={rpc-bind,nfs,mountd} --permanent`
 - `firewall-cmd --reload`
-- `exportfs -arv`
+- `showmount -e localhost` → verifies the exports
 
 **Client-side:**
-- `dnf install nfs-utils`
-- `dnf install autofs` → install needed packages
-- `useradd -M -u 2001 -d /host/john john` → create user without home directory
-- `echo “/host		/etc/auto.misc” >> /etc/auto.master`
-- `echo “john -rw  @ipserver:/host/john” >> /etc/auto.misc`
-- `systemctl restart nfs-server`
+- `dnf install nfs-utils autofs -y` → installs needed packages
+- `getent passwd john` → checks if user already exists
+- `useradd -M -u 2001 -d /host/john john` → if user doesn't exist: same UID as server, no local home directory (`-M`)
+- `echo "/host  /etc/auto.misc" >> /etc/auto.master` → defines the mount point
+- `echo "john  -fstype=nfs,rw,sync  172.24.10.100:/host/john" >> /etc/auto.misc` → defines the export to mount
+- `systemctl enable --now autofs`
 - `systemctl restart autofs`
 
+**Verify Client-side:**
+- `su - john`
+- `pwd` → should display `/host/john`
+- `touch testfile` → verifies the directory is writable
 ---
 
 <h1 align="center" style="color: red;">Lab Evaluation 02</h1>
