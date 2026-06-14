@@ -3,7 +3,6 @@
 ## Introduction
 
 👋 In this section, we will explore some basic commands and essential shell scripts for certification.
-![tree](images/1_WEIqrLV8aBY-VdKLQjElQg.gif)
 
 ## Basic Commands
 
